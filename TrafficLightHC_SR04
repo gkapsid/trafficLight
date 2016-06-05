@@ -1,0 +1,85 @@
+/*
+  
+  Ultrasonic sketch 
+  http://arduinobasics.blogspot.gr/2012/11/arduinobasics-hc-sr04-ultrasonic-sensor.html
+<gkapsid>
+The sketch is for a traffic light combined with ultrasonic sensor. 
+Every ten seconds it reads the sensor value and if an object is close enough the light turns GREEN for 10 seconds and then Yellow for 2 seconds and then RED. 
+If no car is near it remains RED.
+The NewPing library is needed for this sketch. 
+The sensor is a HC-SR04 ultrasonic sensor. </gkapsid 4/2016>
+
+All  Serial.println are for only debugging
+
+ */
+ 
+#include <NewPing.h>
+
+#define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+# define MIN_DIST 10 //Minimum distance in cm
+double duration;
+double distance;
+boolean flag = false;
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
+//ledR = trigger for RED light, ledY = trigger for YELLOW light, ledG = trigger for GREEN light.
+//Those are connected to the base of transistor switches (custom made pcb)
+int ledR = 4;
+int ledY = 5;
+int ledG = 6;
+// the setup routine runs once when you press reset:
+void setup() {                
+  // initialize the digital pin as an output.
+  pinMode(ledR, OUTPUT);
+  pinMode(ledR, OUTPUT);
+  pinMode(ledR, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(TRIGGER_PIN, OUTPUT);
+  // Serial.begin(115200); // Open serial monitor at 115200 baud to see ping results.
+  //while (!Serial) ; //for debug in Leonardo only
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  
+   digitalWrite(TRIGGER_PIN, LOW); 
+   delayMicroseconds(2); 
+
+   digitalWrite(TRIGGER_PIN, HIGH);
+   delayMicroseconds(10); 
+ 
+   digitalWrite(TRIGGER_PIN, LOW);
+   duration = pulseIn(ECHO_PIN, HIGH, 50000);
+ 
+ //Calculate the distance (in cm) based on the speed of sound.
+   distance = duration/58.2;
+ 
+ 
+  digitalWrite(ledR, HIGH);   // turn the LED on (HIGH is the voltage level)
+  //Serial.println("RED: ON ");
+  //Serial.print("dist: ");
+  //Serial.println(distance);
+  delay(10000);               // wait for 10 seconds
+  flag = false;
+  
+  if (distance<MIN_DIST && flag == false){  
+  flag = true;
+  digitalWrite(ledR, LOW);  // turn the LED off by making the voltage LOW
+  //Serial.println("R: OFF, G:ON"); 
+  //Serial.print("dist: ");
+  //Serial.println(distance);
+  digitalWrite(ledG, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(10000);               // wait for 10 seconds
+  digitalWrite(ledG, LOW);
+  //Serial.println("G: OFF");
+  digitalWrite(ledY, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(2000);  // wait for 2 seconds
+  digitalWrite(ledY, LOW);
+  
+
+}
+  //delay(2000);               // wait for a second
+}
