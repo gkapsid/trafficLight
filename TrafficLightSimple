@@ -1,0 +1,29 @@
+
+int ledR = 4;
+int ledY = 5;
+int ledG = 6;
+
+void setup() {                
+  // initialize the digital pin as an output.
+  pinMode(ledR, OUTPUT);
+  pinMode(ledY, OUTPUT);
+  pinMode(ledG, OUTPUT);
+  
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  
+  digitalWrite(ledR, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(10000);               // wait for a second
+  digitalWrite(ledR, LOW);  // turn the LED off by making the voltage LOW
+  
+  digitalWrite(ledG, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(10000);               // wait for a second
+  digitalWrite(ledG, LOW);
+  
+  digitalWrite(ledY, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(2000);  // wait for a second
+  digitalWrite(ledY, LOW);
+  
+}
